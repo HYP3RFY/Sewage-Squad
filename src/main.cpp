@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "tray.h"
 /**
  * A callback function for LLEMU's center button.
  *
@@ -75,18 +75,49 @@ void autonomous() {}
  */
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
+	pros::Motor leftFrontMtr(2);
+	pros::Motor rightFrontMtr(1);
+	pros::Motor leftBackMtr(4);
+	pros::Motor rightBackMtr(3);
+
+	pros::Motor leftIntake(6);
+	pros::Motor rightIntake(7);
+
+	pros::Motor tray(TRAY_MOTOR);
+	pros::Motor arm(10);
+	arm.set_gearing(MOTOR_GEARSET_36);
+
+	#define DEADZONE(x) fabs(x)<20?0:x
+	#define THROTTLE_FORWARD ANALOG_LEFT_Y
+	#define STRAFE ANALOG_LEFT_Y
+	#define TURN_CONTROL ANALOG_RIGHT_X
+
+	arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+
+	Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 
 	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
+		pros::lcd::print(0, "%s", Odometry::GetRobotPosition().ToString());
+		pros::lcd::print(1, "%f", Odometry::GetRobotRotation()/0.0174533);
 
-		left_mtr = left;
-		right_mtr = right;
+		int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));
+		int strafe = DEADZONE(master.get_analog(STRAFE) * (200/128.0));
+		int turn = DEADZONE(master.get_analog(TURN_CONTROL) * (200/128.0));
+
+		leftFrontMtr.move_velocity(turn + throttle + strafe);
+		leftBackMtr.move_velocity(turn + throttle - strafe);
+		rightFrontMtr.move_velocity(turn - throttle + strafe);
+		rightBackMtr.move_velocity(turn - throttle - strafe);
+
+		if (master.get_digital(DIGITAL_A)){
+			Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Push);
+
+		} else if (master.get_digital(DIGITAL_B)) {
+			Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
+
+		}
+
+
 		pros::delay(20);
 	}
 }
