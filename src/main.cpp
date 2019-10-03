@@ -1,5 +1,5 @@
 #include "main.h"
-#include "tray.h"
+#include "subsystems/tray.h"
 /**
  * A callback function for LLEMU's center button.
  *
@@ -24,9 +24,11 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+
+
+
 }
 
 /**
@@ -80,12 +82,24 @@ void opcontrol() {
 	pros::Motor leftBackMtr(4);
 	pros::Motor rightBackMtr(3);
 
-	pros::Motor leftIntake(6);
-	pros::Motor rightIntake(7);
+	leftFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	rightFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	leftBackMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	rightBackMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
-	pros::Motor tray(TRAY_MOTOR);
-	pros::Motor arm(10);
+	pros::Motor leftIntake(15);
+	pros::Motor rightIntake(14);
+	pros::ADIPotentiometer pot = pros::ADIPotentiometer('h');
+
+	leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
+	rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
+
+	pros::Motor trayMotor(11);
+	pros::Motor arm(12);
 	arm.set_gearing(MOTOR_GEARSET_36);
+	arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
+	trayMotor.set_gearing(MOTOR_GEARSET_36);
 
 	#define DEADZONE(x) fabs(x)<20?0:x
 	#define THROTTLE_FORWARD ANALOG_LEFT_Y
@@ -97,8 +111,11 @@ void opcontrol() {
 	Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 
 	while (true) {
-		pros::lcd::print(0, "%s", Odometry::GetRobotPosition().ToString());
-		pros::lcd::print(1, "%f", Odometry::GetRobotRotation()/0.0174533);
+
+		pros::delay(20);
+		
+		//pros::lcd::print(0, "%s", Odometry::GetRobotPosition().ToString());
+		//pros::lcd::print(1, "%f", Odometry::GetRobotRotation()/0.0174533);
 
 		int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));
 		int strafe = DEADZONE(master.get_analog(STRAFE) * (200/128.0));
@@ -114,9 +131,26 @@ void opcontrol() {
 
 		} else if (master.get_digital(DIGITAL_B)) {
 			Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
-
 		}
 
+		if (master.get_digital(DIGITAL_R1)){
+			arm.move_velocity(200);
+		} else if (master.get_digital(DIGITAL_R2)){
+			arm.move_velocity(-200);
+		} else {
+			arm.move_velocity(0);
+		}
+
+		if (master.get_digital(DIGITAL_L1)){
+			leftIntake.move_velocity(200);
+			rightIntake.move_velocity(-200);
+		} else if (master.get_digital(DIGITAL_L2)){
+			leftIntake.move_velocity(-200);
+			rightIntake.move_velocity(200);
+		} else{
+			leftIntake.move_velocity(0);
+			rightIntake.move_velocity(0);
+		}
 
 		pros::delay(20);
 	}

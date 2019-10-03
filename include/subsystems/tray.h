@@ -1,6 +1,7 @@
 #include "main.h"
 
-#pragma once
+#ifndef TRAYH
+#define TRAYH
 
 namespace Subsystems::Tray {
 
@@ -10,3 +11,5 @@ namespace Subsystems::Tray {
 
   void Init(pros::Motor* trayMtr, pros::ADIAnalogIn* pot);
 }
+
+#endif

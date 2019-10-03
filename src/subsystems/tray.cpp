@@ -1,5 +1,6 @@
 #include "main.h"
 #include "subsystems/tray.h"
+#include "pros/rtos.h"
 
 namespace Subsystems::Tray{
 
@@ -44,7 +45,7 @@ namespace Subsystems::Tray{
     init = true;
     stopped = false;
 
-    task = new pros::Task (RunTray);
+    task = new pros::Task (RunTray, NULL, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "");
     mutex = new pros::Mutex();
   }
 
