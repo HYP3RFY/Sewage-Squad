@@ -76,6 +76,11 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	#define DEADZONE(x) fabs(x)<20?0:x
+	#define THROTTLE_FORWARD ANALOG_LEFT_Y
+	#define STRAFE ANALOG_LEFT_Y
+	#define TURN_CONTROL ANALOG_RIGHT_X
+
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	pros::Motor leftFrontMtr(2);
 	pros::Motor rightFrontMtr(1);
@@ -101,10 +106,7 @@ void opcontrol() {
 	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	trayMotor.set_gearing(MOTOR_GEARSET_36);
 
-	#define DEADZONE(x) fabs(x)<20?0:x
-	#define THROTTLE_FORWARD ANALOG_LEFT_Y
-	#define STRAFE ANALOG_LEFT_Y
-	#define TURN_CONTROL ANALOG_RIGHT_X
+
 
 	arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 
@@ -112,8 +114,6 @@ void opcontrol() {
 
 	while (true) {
 
-		pros::delay(20);
-		
 		//pros::lcd::print(0, "%s", Odometry::GetRobotPosition().ToString());
 		//pros::lcd::print(1, "%f", Odometry::GetRobotRotation()/0.0174533);
 
