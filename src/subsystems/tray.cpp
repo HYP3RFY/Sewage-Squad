@@ -4,7 +4,7 @@
 
 namespace Subsystems::Tray{
 
-  TrayPosition target = TrayPosition::Storage;
+  int target = TrayPosition::Storage;
 
   pros::Mutex* mutex;
 
@@ -35,7 +35,7 @@ namespace Subsystems::Tray{
       pros::lcd::print(2, "%f", (float)currentPos);
       pros::lcd::print(3, "%f", (float)error);
 
-      trayMotor->move_velocity(error*.2);
+      trayMotor->move_velocity(error*.05);
 
       pros::Task::delay(50);
     }

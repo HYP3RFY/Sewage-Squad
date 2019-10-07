@@ -45,11 +45,13 @@ rightBackMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
 arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 
+Subsystems::Tray::Init(&trayMotor, &pot);
+
 //	Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 
 while (true) {
 
-	pros::lcd::print(0, "%d", pot.get_value());
+	//pros::lcd::print(0, "%d", pot.get_value());
 
 	//pros::lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
 	//pros::lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
@@ -65,6 +67,16 @@ while (true) {
 
 	if (master.get_digital(DIGITAL_A)){
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Push);
+		pros::delay(3000);
+
+		leftIntake.move_velocity(-10);
+		rightIntake.move_velocity(10);
+		pros::delay(250);
+		leftFrontMtr.move_velocity(-15);
+		rightFrontMtr.move_velocity(15);
+		leftBackMtr.move_velocity(-10);
+		rightBackMtr.move_velocity(10);
+		pros::delay(2000);
 
 	} else if (master.get_digital(DIGITAL_B)) {
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
