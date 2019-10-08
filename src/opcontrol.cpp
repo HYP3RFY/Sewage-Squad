@@ -47,8 +47,6 @@ arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 
 Subsystems::Tray::Init(&trayMotor, &pot);
 
-//	Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
-
 while (true) {
 
 	//pros::lcd::print(0, "%d", pot.get_value());
@@ -57,7 +55,7 @@ while (true) {
 	//pros::lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
 
 	int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));
-	int strafe = DEADZONE(master.get_analog(STRAFE) * (200/128.0));
+	int strafe = DEADZONE(master.get_analog(STRAFE) * (-200/128.0));
 	int turn = DEADZONE(master.get_analog(TURN_CONTROL) * 0.9);
 
 	leftFrontMtr.move_velocity(turn + throttle - strafe);
@@ -67,17 +65,16 @@ while (true) {
 
 	if (master.get_digital(DIGITAL_A)){
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Push);
-		pros::delay(3000);
 
-		leftIntake.move_velocity(-10);
-		rightIntake.move_velocity(10);
-		pros::delay(250);
-		leftFrontMtr.move_velocity(-15);
-		rightFrontMtr.move_velocity(15);
-		leftBackMtr.move_velocity(-10);
-		rightBackMtr.move_velocity(10);
-		pros::delay(2000);
-
+		if (Subsystems::Tray::TrayPosition::Push){
+			leftIntake.move_velocity(-10);
+			rightIntake.move_velocity(10);
+			leftFrontMtr.move_velocity(-15);
+			rightFrontMtr.move_velocity(15);
+			leftBackMtr.move_velocity(-10);
+			rightBackMtr.move_velocity(10);
+			pros::delay(3000);
+		}
 	} else if (master.get_digital(DIGITAL_B)) {
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 	}

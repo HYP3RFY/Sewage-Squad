@@ -18,7 +18,17 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	pros::lcd::set_text(1, "   _____ _       _____ _            __   __        ");
+	pros::lcd::set_text(2, "  / ____| |     |  __ (_)           \\ \\ / /        ");
+	pros::lcd::set_text(3, " | (___ | |_    | |__) | _   _ ___   \\ V /         ");
+	pros::lcd::set_text(4, "  \\___ \\| __|   |  ___/ | | | / __|   > <          ");
+	pros::lcd::set_text(5, "  ____) | |_ _  | |   | | |_| \\__ \\  / . \\         ");
+	pros::lcd::set_text(6, " |_____/ \\__(_) |_|   |_|\\__,_|___/ /_/ \\_\\        ");
+	pros::lcd::set_text(7, " |  __ \\     | |         | |    (_)                ");
+	pros::lcd::set_text(8, " | |__) |___ | |__   ___ | |     _  ___  _ __  ___ ");
+	pros::lcd::set_text(9, " |  _  // _ \\| '_ \\ / _ \\| |    | |/ _ \\| '_ \\/ __|");
+	pros::lcd::set_text(10, " | | \\ \\ (_) | |_) | (_) | |____| | (_) | | | \\__ \\");
+	pros::lcd::set_text(11, " |_|  \\_\\___/|_.__/ \\___/|______|_|\\___/|_| |_|___/");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
