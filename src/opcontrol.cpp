@@ -4,7 +4,7 @@
 void opcontrol() {
 
 #include "main.h"
-#define DEADZONE(x) fabs(x)<20?0:x
+#define DEADZONE(x) fabs(x)<15?0:x
 #define THROTTLE_FORWARD ANALOG_LEFT_Y
 #define STRAFE ANALOG_LEFT_X
 #define TURN_CONTROL ANALOG_RIGHT_X
@@ -58,7 +58,7 @@ while (true) {
 
 	int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));
 	int strafe = DEADZONE(master.get_analog(STRAFE) * (200/128.0));
-	int turn = DEADZONE(master.get_analog(TURN_CONTROL) * 1.1);
+	int turn = DEADZONE(master.get_analog(TURN_CONTROL) * 0.9);
 
 	leftFrontMtr.move_velocity(turn + throttle - strafe);
 	leftBackMtr.move_velocity(turn + throttle + strafe);
