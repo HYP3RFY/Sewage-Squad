@@ -18,13 +18,14 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "  ___________________ ____  ___");
+	/*
 	pros::lcd::set_text(2, " /   _____/\\______   \\   \\/  /");
+	pros::lcd::set_text(1, "  ___________________ ____  ___");
 	pros::lcd::set_text(3, " \\_____  \\  |     ___/ \\     / ");
 	pros::lcd::set_text(4, " /        \\ |    |     /     \\ ");
 	pros::lcd::set_text(5, "/_______  / |____|    /___/\\  \\");
 	pros::lcd::set_text(6, "        \\/                  \\_/");
-
+	*/
 	pros::lcd::register_btn1_cb(on_center_button);
 }
 

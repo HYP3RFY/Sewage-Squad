@@ -47,6 +47,8 @@ arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 
 Subsystems::Tray::Init(&trayMotor, &pot);
 
+bool goBack = false;
+
 while (true) {
 
 	//pros::lcd::print(0, "%d", pot.get_value());
@@ -67,23 +69,26 @@ while (true) {
 
 	leftFrontMtr.move_velocity((turn + throttle - strafe) * slow);
 	leftBackMtr.move_velocity((turn + throttle + strafe) * slow);
-	rightFrontMtr.move_velocity((turn - throttle - strafe) * slow); //MULTIPLY BY CONSTANT TO FIX TURNING
-	rightBackMtr.move_velocity((turn - throttle + strafe) * slow); //MULTIPLY BY CONSTANT TO FIX TURNING
+	rightFrontMtr.move_velocity((turn - throttle - strafe) * slow);
+	rightBackMtr.move_velocity((turn - throttle + strafe) * slow);
 
+	if (pot.get_value() >= 1570 && goBack) {
+		leftIntake.move_velocity(-10);
+		rightIntake.move_velocity(10);
+		leftFrontMtr.move_velocity(-15);
+		rightFrontMtr.move_velocity(15);
+		leftBackMtr.move_velocity(-10);
+		rightBackMtr.move_velocity(10);
+		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
+		goBack=false;
+	}
 
+	if (pot.get_value() <= 1400) goBack=true;
 
 	if (master.get_digital(DIGITAL_A)){
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Push);
 
-		if (Subsystems::Tray::TrayPosition::Push){
-			leftIntake.move_velocity(-10);
-			rightIntake.move_velocity(10);
-			leftFrontMtr.move_velocity(-15);
-			rightFrontMtr.move_velocity(15);
-			leftBackMtr.move_velocity(-10);
-			rightBackMtr.move_velocity(10);
-			pros::delay(3000);
-		}
+
 	} else if (master.get_digital(DIGITAL_B)) {
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 	}
