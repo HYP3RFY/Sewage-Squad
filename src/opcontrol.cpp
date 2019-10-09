@@ -57,11 +57,20 @@ while (true) {
 	int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));
 	int strafe = DEADZONE(master.get_analog(STRAFE) * (-200/128.0));
 	int turn = DEADZONE(master.get_analog(TURN_CONTROL) * 0.9);
+	double slow = 1.0;
 
-	leftFrontMtr.move_velocity(turn + throttle - strafe);
-	leftBackMtr.move_velocity(turn + throttle + strafe);
-	rightFrontMtr.move_velocity(turn - throttle - strafe);
-	rightBackMtr.move_velocity(turn - throttle + strafe);
+	if (master.get_digital(DIGITAL_X)){
+		double slow = 0.25;
+	} else {
+		double slow = 1.0;
+	}
+
+	leftFrontMtr.move_velocity((turn + throttle - strafe) * slow);
+	leftBackMtr.move_velocity((turn + throttle + strafe) * slow);
+	rightFrontMtr.move_velocity((turn - throttle - strafe) * slow); //MULTIPLY BY CONSTANT TO FIX TURNING
+	rightBackMtr.move_velocity((turn - throttle + strafe) * slow); //MULTIPLY BY CONSTANT TO FIX TURNING
+
+
 
 	if (master.get_digital(DIGITAL_A)){
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Push);
