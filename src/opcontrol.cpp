@@ -79,6 +79,7 @@ while (true) {
 		rightFrontMtr.move_velocity(15);
 		leftBackMtr.move_velocity(-10);
 		rightBackMtr.move_velocity(10);
+		pros::delay(3000);
 		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 		goBack=false;
 	}
