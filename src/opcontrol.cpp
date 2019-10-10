@@ -87,7 +87,7 @@ while (true) {
 	}
 	//ARM cODE
 	if (master.get_digital(DIGITAL_R1)){
-
+		arm.move_velocity(200);
 	} else if (master.get_digital(DIGITAL_R2)){
 		arm.move_velocity(-200);
 	} else {
@@ -95,7 +95,6 @@ while (true) {
 	}
 	//Arm Code
 	if (liftToggle == true){
-		arm.move_velocity(200);
 		if (master.get_digital(DIGITAL_X)){
 			liftToggle = false;
 		}
