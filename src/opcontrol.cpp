@@ -1,4 +1,4 @@
-#include "main.h"
+#include "subsystems/main.h"
 #include "subsystems/tray.h"
 
 void opcontrol() {
@@ -8,7 +8,7 @@ void opcontrol() {
 #define THROTTLE_FORWARD ANALOG_LEFT_Y
 #define STRAFE ANALOG_LEFT_X
 #define TURN_CONTROL ANALOG_RIGHT_X
-/hi
+
 pros::delay(100);
 //DriveTrain
 pros::Controller master(pros::E_CONTROLLER_MASTER);
