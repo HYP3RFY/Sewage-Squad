@@ -1,5 +1,26 @@
 #include "main.h"
 
+lv_obj_t * myButton;
+lv_obj_t * myButtonLabel;
+lv_obj_t * myLabel;
+
+lv_style_t myButtonStyleREL; //relesed style
+lv_style_t myButtonStylePR; //pressed style
+
+static lv_res_t btn_click_action(lv_obj_t * btn)
+{
+    uint8_t id = lv_obj_get_free_num(btn); //id usefull when there are multiple buttons
+
+    if(id == 0)
+    {
+        char buffer[100];
+		sprintf(buffer, "button was clicked %i milliseconds from start", pros::millis());
+		lv_label_set_text(myLabel, buffer);
+    }
+
+    return LV_RES_OK;
+}
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -27,7 +48,8 @@ void initialize() {
 	pros::lcd::set_text(6, "        \\/                  \\_/");
 	*/
 	pros::lcd::register_btn1_cb(on_center_button);
-}
+
+	}
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
