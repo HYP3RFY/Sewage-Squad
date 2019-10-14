@@ -1,4 +1,9 @@
 #include "main.h"
+#include "odometry/odometry.h"
+#include "odometry/odometryMovement.h"
+#include "odometry/angle.h"
+#include "odometry/mecanum.h"
+
 
 lv_obj_t * myButton;
 lv_obj_t * myButtonLabel;
@@ -47,6 +52,36 @@ void initialize() {
 	pros::lcd::set_text(5, "/_______  / |____|    /___/\\  \\");
 	pros::lcd::set_text(6, "        \\/                  \\_/");
 	*/
+
+  auto brake = MOTOR_BRAKE_BRAKE;
+
+  Odometry::Movement::OdometryMotor* frontLeftCMtr = new Odometry::Movement::OdometryMotor(2, false, MOTOR_GEARSET_18);
+  frontLeftCMtr->motor->set_brake_mode(brake);
+
+  Odometry::Movement::OdometryMotor* backLeftCMtr = new Odometry::Movement::OdometryMotor(4, false, MOTOR_GEARSET_18);
+  backLeftCMtr->motor->set_brake_mode(brake);
+
+  Odometry::Movement::OdometryMotor* backRightCMtr = new Odometry::Movement::OdometryMotor(3, true, MOTOR_GEARSET_18);
+  backRightCMtr->motor->set_brake_mode(brake);
+
+  Odometry::Movement::OdometryMotor* frontRightCMtr = new Odometry::Movement::OdometryMotor(1, true, MOTOR_GEARSET_18);
+  frontRightCMtr->motor->set_brake_mode(brake);
+
+  pros::ADIEncoder* leftWheelEncoder = new pros::ADIEncoder (3, 4, true);
+  pros::ADIEncoder* rightWheelEncoder = new pros::ADIEncoder(1, 2, false);
+  pros::ADIEncoder* backWheelEncoder = new pros::ADIEncoder(5, 6, true);
+
+  Odometry::SetTrackingCenterParameters(6.75,6.75,-5);
+  Odometry::SetTrackingWheelEncoders(leftWheelEncoder, rightWheelEncoder, backWheelEncoder);
+  Odometry::SetStartingPositionAndRotation(Odometry::Vector2(0, 0), Odometry::Angle::FromDegrees(90).GetRadianMeasure());
+  Odometry::SetWheelCircumference(2.75 * 3.14159);
+
+  Odometry::Movement::SetMotorsMecanum(frontLeftCMtr, backLeftCMtr, frontRightCMtr, backRightCMtr);
+
+  pros::delay(100);
+
+  Odometry::Init();
+
 	pros::lcd::register_btn1_cb(on_center_button);
 
 	}
@@ -67,4 +102,6 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+}
