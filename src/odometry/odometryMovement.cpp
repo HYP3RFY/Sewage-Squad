@@ -131,6 +131,10 @@ namespace Odometry::Movement {
   //PIDSettings OdometryMovementGoToSpotTurnPID = PIDSettings(4,.35,-.05);
   //PIDSettings OdometryMovementGoToSpotMovePID = PIDSettings(5,0.1,-1);
 
+  void GoToSpot(Vector2 targetSpot){
+    GoToSpot(targetSpot, PIDSettings(4,.35,-.05), PIDSettings(5,0.1,-1));
+  }
+
   void GoToSpot(Vector2 targetSpot, PIDSettings OdometryMovementGoToSpotTurnPID, PIDSettings OdometryMovementGoToSpotMovePID){
     double distanceThreshold = 1;
     bool first = false;
