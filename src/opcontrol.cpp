@@ -1,5 +1,10 @@
 #include "main.h"
 #include "subsystems/tray.h"
+#include "odometry/odometry.h"
+#include "odometry/odometryMovement.h"
+#include "odometry/angle.h"
+#include "odometry/mecanum.h"
+#include "pidparams.h"
 
 void opcontrol() {
 
@@ -48,8 +53,8 @@ while (true) {
 	//pros::lcd::print(0, "%d", pot.get_value());
 	pros::lcd::print(4, "%f", arm.get_position());
 	//Display Odometry values
-	//pros::lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
-	//pros::lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
+	pros::lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
+	pros::lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
 
 	//Drive values
 	int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));

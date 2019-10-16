@@ -3,7 +3,7 @@
 #include "odometry/odometryMovement.h"
 #include "odometry/angle.h"
 #include "odometry/mecanum.h"
-
+#include "autonomousSelector.h"
 
 lv_obj_t * myButton;
 lv_obj_t * myButtonLabel;
@@ -84,6 +84,8 @@ void initialize() {
 
 	pros::lcd::register_btn1_cb(on_center_button);
 
+
+
 	}
 
 /**
@@ -103,5 +105,5 @@ void disabled() {}
  * starts.
  */
 void competition_initialize() {
-
+   Autonomous::SelectAutonomousType();
 }
