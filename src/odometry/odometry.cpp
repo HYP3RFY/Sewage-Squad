@@ -202,7 +202,7 @@ namespace Odometry{
     OdometryRunning = true;
     //spawn thread
     std::string OdometryThreadName("Odometry Thread");
-    OdometryThread = new pros::Task(OdometryLoop, &OdometryThreadName);
+    OdometryThread = new pros::Task(OdometryLoop, NULL, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odometry-Thread");
   }
 
 

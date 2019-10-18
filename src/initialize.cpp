@@ -3,28 +3,7 @@
 #include "odometry/odometryMovement.h"
 #include "odometry/angle.h"
 #include "odometry/mecanum.h"
-#include "autonomousSelector.h"
-
-lv_obj_t * myButton;
-lv_obj_t * myButtonLabel;
-lv_obj_t * myLabel;
-
-lv_style_t myButtonStyleREL; //relesed style
-lv_style_t myButtonStylePR; //pressed style
-
-static lv_res_t btn_click_action(lv_obj_t * btn)
-{
-    uint8_t id = lv_obj_get_free_num(btn); //id usefull when there are multiple buttons
-
-    if(id == 0)
-    {
-        char buffer[100];
-		sprintf(buffer, "button was clicked %i milliseconds from start", pros::millis());
-		lv_label_set_text(myLabel, buffer);
-    }
-
-    return LV_RES_OK;
-}
+#include "subsystems/autonSelectVar.h"
 
 void on_center_button() {
 	static bool pressed = false;
@@ -104,6 +83,43 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
+
 void competition_initialize() {
-   Autonomous::SelectAutonomousType();
+  pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+  while (true){
+     if (master.get_digital(DIGITAL_UP)){
+       autonSelect = 1;
+     }else if (master.get_digital(DIGITAL_LEFT)){
+       autonSelect = 2;
+     }else if (master.get_digital(DIGITAL_RIGHT)){
+       autonSelect = 3;
+     }else if (master.get_digital(DIGITAL_LEFT)){
+       autonSelect = 4;
+    }else if (master.get_digital(DIGITAL_DOWN)){
+      autonSelect = 5;
+    }else if (master.get_digital(DIGITAL_Y)){
+      autonSelect = 6;
+    }else {
+      autonSelect = 0;
+   }
+
+   //---------------------------------------------------------------------------
+
+   if (autonSelect == 0){
+     autonName = "none";
+   }else if (autonSelect == 1){
+     autonName = "Red Square";
+   }else if (autonSelect == 2){
+     autonName = "Red Rectangle";
+   }else if (autonSelect == 3){
+     autonName = "Blue Square";
+   }else if (autonSelect == 4){
+     autonName = "Blue Rectangle";
+   }else if (autonSelect == 5){
+     autonName = "Skills Blue";
+   }
+    pros::lcd::print(4, "%s", autonName);
+
+  }
 }

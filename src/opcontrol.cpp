@@ -51,10 +51,15 @@ bool liftToggle = false;
 while (true) {
 	//Display Pot Value
 	//pros::lcd::print(0, "%d", pot.get_value());
-	pros::lcd::print(4, "%f", arm.get_position());
+	//pros::lcd::print(4, "%f", arm.get_position());
 	//Display Odometry values
 	pros::lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
 	pros::lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
+
+	//AutonSelector test
+	if (master.get_digital(DIGITAL_Y)){
+		void competition_initialize();
+	}
 
 	//Drive values
 	int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));

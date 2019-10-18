@@ -4,7 +4,8 @@
 #include "odometry/angle.h"
 #include "odometry/mecanum.h"
 #include "pidparams.h"
-#include "autonomousSelector.h"
+#include "subsystems/autonSelectVar.h"
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -30,19 +31,24 @@ void autonomous() {
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
 
+  autonName = "none";
   arm.move_relative(650, 100);
-
-/*
-  if (Autonomous::SelectedAutonomousType == Autonomous::AutonomousType::Blue){
   //Odometry::Movement::GoToSpot(Odometry::Vector2(0,0), OdometryMovementGoToSpotTurnPID, OdometryMovementGoToSpotMovePID);
-}else if (Autonomous::SelectedAutonomousType == Autonomous::AutonomousType::Blue2){
-}else if (Autonomous::SelectedAutonomousType == Autonomous::AutonomousType::Red){
+  if (autonSelect == 0){
 
-}else if (Autonomous::SelectedAutonomousType == Autonomous::AutonomousType::Red2){
-}else if (Autonomous::SelectedAutonomousType == Autonomous::AutonomousType::Skills){
+  }else if(autonSelect == 1){
 
+  }else if(autonSelect == 2){
+
+  }else if(autonSelect == 3){
+
+  }else if(autonSelect == 4){
+
+  }else if(autonSelect == 5){
+
+  }
 }
-*/
+
 /*Skills run starts with one orange cube in intake
 Unpack arms
 Start robot next to middle tower on blue side
@@ -59,4 +65,3 @@ Grab other purple cube and collect 3 more purples
 Stack them
 Run should end with 2 orange cubes and 10 purple cubes, 44 points
 */
-}
