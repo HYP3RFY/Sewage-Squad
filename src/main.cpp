@@ -10,7 +10,7 @@
 #define THROTTLE_FORWARD ANALOG_LEFT_Y
 #define STRAFE ANALOG_LEFT_X
 #define TURN_CONTROL ANALOG_RIGHT_X
-int autonSelect = 0;
+int autonSelect = 1;
 std::string autonName = "none";
 /**
  * A callback function for LLEMU's center button.
@@ -51,7 +51,7 @@ pros::ADIEncoder* backWheelEncoder = new pros::ADIEncoder(5, 6, true);
 
 Odometry::SetTrackingCenterParameters(6.75,6.75,-5);
 Odometry::SetTrackingWheelEncoders(leftWheelEncoder, rightWheelEncoder, backWheelEncoder);
-Odometry::SetStartingPositionAndRotation(Odometry::Vector2(0, 0), Odometry::Angle::FromDegrees(90).GetRadianMeasure());
+Odometry::SetStartingPositionAndRotation(Odometry::Vector2(0, 0), Odometry::Angle::FromDegrees(0).GetRadianMeasure());
 Odometry::SetWheelCircumference(2.75 * 3.14159);
 
 Odometry::Movement::SetMotorsMecanum(frontLeftCMtr, backLeftCMtr, frontRightCMtr, backRightCMtr);
@@ -118,6 +118,15 @@ void competition_initialize() {
 }
 
 void autonomous() {
+	pros::Motor leftFrontMtr(2);
+	pros::Motor rightFrontMtr(1);
+	pros::Motor leftBackMtr(4);
+	pros::Motor rightBackMtr(3);
+
+	leftFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	rightFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	leftBackMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	rightBackMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	pros::Motor trayMotor(11);
   pros::Motor arm(12);
   arm.set_gearing(MOTOR_GEARSET_36);
@@ -131,12 +140,36 @@ void autonomous() {
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
 
+
   autonName = "none";
-  arm.move_relative(650, 100);
-  //Odometry::Movement::GoToSpot(Odometry::Vector2(0,0), OdometryMovementGoToSpotTurnPID, OdometryMovementGoToSpotMovePID);
+  arm.move_absolute(550, 100);
+	pros::delay(1000);
+	arm.move_absolute(-270, 100);
+	pros::delay(1000);
+
   if (autonSelect == 0){
-//red square
+//red squareq
   }else if(autonSelect == 1){
+		leftIntake.move_velocity(200);
+		rightIntake.move_velocity(-200);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(29,0), Odometry::Angle::FromDegrees(0), PIDSettings(1.6,0.1,-.1), OdometryMovementGoToSpotTurnPID);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(18,.35), Odometry::Angle::FromDegrees(120), PIDSettings(3.2,0.1,-.5), PIDSettings(2.5,0.1,-.3));
+		Odometry::Movement::MoveLinear(Odometry::Vector2(5.3,10), Odometry::Angle::FromDegrees(120), PIDSettings(3.2,0.1,-.5), PIDSettings(2.8,0.1,-.3));
+
+		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Push);
+		pros::delay(200);
+		leftIntake.move_velocity(-15);
+		rightIntake.move_velocity(15);
+		leftFrontMtr.move_velocity(-10);
+		rightFrontMtr.move_velocity(10);
+		leftBackMtr.move_velocity(-10);
+		rightBackMtr.move_velocity(10);
+		pros::delay(3000);
+		Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
+
+		//Odometry::Movement::GoToSpot(Odometry::Vector2(0,14), OdometryMovementGoToSpotTurnPID, PIDSettings(1.5,0.1,-1));
 //red rec
   }else if(autonSelect == 2){
 //blue square
@@ -179,6 +212,7 @@ void opcontrol() {
 	arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 	//Initialize Tray Code
 	Subsystems::Tray::Init(&trayMotor, &pot);
+	Subsystems::Tray::MoveTrayToPosition(Subsystems::Tray::TrayPosition::Storage);
 
 	bool goBack = false;
 	bool liftToggle = false;
@@ -187,11 +221,10 @@ void opcontrol() {
 	while (true) {
 		//Display Pot Value
 		//pros::lcd::print(0, "%d", pot.get_value());
-		//pros::lcd::print(4, "%f", arm.get_position());
+		pros::lcd::print(4, "%f", arm.get_position());
 		//Display Odometry values
 		pros::lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
 		pros::lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
-
 		//AutonSelector test
 		if (master.get_digital(DIGITAL_Y)){
 			void competition_initialize();
