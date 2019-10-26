@@ -35,7 +35,7 @@ namespace Subsystems::Tray{
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);
 
-      trayMotor->move_velocity(error*.05);
+      trayMotor->move_velocity(error*.08);
 
       pros::Task::delay(50);
     }

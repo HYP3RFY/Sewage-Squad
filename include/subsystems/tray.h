@@ -5,7 +5,7 @@
 
 namespace Subsystems::Tray {
 
-  enum TrayPosition {Storage = 845, Push = 1622, Stack = 1000};
+  enum TrayPosition {Storage = 845, Push = 1630, Stack = 1000};
 
   void MoveTrayToPosition(TrayPosition);
 
