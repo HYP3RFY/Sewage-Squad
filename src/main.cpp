@@ -128,10 +128,19 @@ void autonomous() {
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
 
-  /*arm.move_absolute(550, 100);
-	delay(1000);
-	arm.move_absolute(-270, 100);
-	delay(750);*/
+  arm.move_velocity(100);
+	delay(250);
+	trayMotor.move_velocity(-10);
+	arm.move_velocity(40);
+	delay(250);
+	arm.move_velocity(100);
+	trayMotor.move_velocity(0);
+	delay(1500);
+	arm.move_velocity(-100);
+	delay(1500);
+	arm.move_velocity(0);
+
+
 //Put Auton Code Here:
 	if (autonName == "Red Square"){
 
