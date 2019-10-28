@@ -16,7 +16,7 @@ using namespace pros;
 using namespace Subsystems;
 
 bool armUnfold = true;
-std::string autonName = "Blue Square";
+std::string autonName = "Red Square";
 
 
 Controller master(E_CONTROLLER_MASTER);
@@ -129,6 +129,7 @@ void autonomous() {
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
 
   arm.move_velocity(100);
+	trayMotor.move_velocity(-10);
 	delay(250);
 	trayMotor.move_velocity(-10);
 	arm.move_velocity(40);
@@ -137,24 +138,24 @@ void autonomous() {
 	trayMotor.move_velocity(0);
 	delay(1500);
 	arm.move_velocity(-100);
-	delay(1500);
+	delay(500);
 	arm.move_velocity(0);
 
 
 //Put Auton Code Here:
 	if (autonName == "Red Square"){
-
-	}else if(autonName == "Red Rectangle"){
-
-	}else if(autonName == "Blue Square"){
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(38,-6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.3,-.0001),PIDSettings(5,.2,-.05));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(45,-6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.3,-.005),PIDSettings(5,.2,-.05));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(15.5,-12.7),Odometry::Angle::FromDegrees(180),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(9,-12.7),Odometry::Angle::FromDegrees(180),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(5.3,8.8),Odometry::Angle::FromDegrees(135),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
+		Odometry::Movement::MoveLinear(Odometry::Vector2(38,6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.3,-.0001),PIDSettings(5,.2,-.05),1.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(45,6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.3,-.005),PIDSettings(5,.2,-.05),1.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(15.5,12.7),Odometry::Angle::FromDegrees(-180),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
+		Odometry::Movement::MoveLinear(Odometry::Vector2(9,12.7),Odometry::Angle::FromDegrees(-180),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
+		Odometry::Movement::MoveLinear(Odometry::Vector2(5.3,-8.8),Odometry::Angle::FromDegrees(-135),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
+	}else if(autonName == "Red Rectangle"){
+
+	}else if(autonName == "Blue Square"){
+
 	}else if(autonName == "Blue Rectangle"){
 
 	}else if(autonName == "Skills"){

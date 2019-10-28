@@ -204,16 +204,16 @@ namespace Odometry::Movement {
   }
 
   #if defined(MECANUM_WHEEL) || defined(XDRIVE)
-  void MoveLinear(Vector2 spot, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings){
-    MoveLinearComplete(spot, 0.0, false, LinearMoveSettings, LinearTurnSettings);
+  void MoveLinear(Vector2 spot, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings, double distanceThreshold){
+    MoveLinearComplete(spot, 0.0, false, LinearMoveSettings, LinearTurnSettings, distanceThreshold);
   }
-  void MoveLinear(Vector2 spot, Angle angle, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings){
-    MoveLinearComplete(spot, angle, true, LinearMoveSettings, LinearTurnSettings);
+  void MoveLinear(Vector2 spot, Angle angle, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings, double distanceThreshold){
+    MoveLinearComplete(spot, angle, true, LinearMoveSettings, LinearTurnSettings, distanceThreshold);
   }
 
   namespace{
 
-    void MoveLinearComplete(Vector2 spot, Angle angle, bool doAngleError, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings){
+    void MoveLinearComplete(Vector2 spot, Angle angle, bool doAngleError, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings, double distanceThreshold){
 
       //PIDSettings LinearMoveSettings = PIDSettings(0,0,0);
       //PIDSettings LinearTurnSettings = PIDSettings(0,0,0);
@@ -226,7 +226,6 @@ namespace Odometry::Movement {
         LinearTurnSettings = PIDSettings(4,0,-.1);
       }
 */
-      double distanceThreshold = 1;
       double angleThreshold = Angle::FromDegrees(5);
 
       bool first = false;

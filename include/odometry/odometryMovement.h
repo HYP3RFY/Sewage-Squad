@@ -52,10 +52,10 @@ namespace Odometry::Movement{
   #endif
 
   #if defined(MECANUM_WHEEL) ||defined(XDRIVE)
-    void MoveLinear(Vector2 spot, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings);
-    void MoveLinear(Vector2 spot, Angle angle, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings);
+    void MoveLinear(Vector2 spot, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings, double distanceThreshold = 1);
+    void MoveLinear(Vector2 spot, Angle angle, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings, double distanceThreshold = 1);
     namespace{
-      void MoveLinearComplete(Vector2 spot, Angle angle, bool doAngleError, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings);
+      void MoveLinearComplete(Vector2 spot, Angle angle, bool doAngleError, PIDSettings LinearMoveSettings, PIDSettings LinearTurnSettings, double distanceThreshold);
     }
   #endif
 }
