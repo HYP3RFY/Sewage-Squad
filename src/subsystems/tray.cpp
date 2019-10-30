@@ -10,7 +10,14 @@ namespace Subsystems::Tray{
 
   int GetTarget(){
     mutex->take(10000);
-    int t = target;
+    int t;
+    if (target == TrayPosition::Storage) {
+      t = 845;
+    } else if (target == TrayPosition::Push) {
+      t = 1630;
+    } else if (target == TrayPosition::Stack) {
+      t = 1000;
+    }
     mutex->give();
     return t;
   }

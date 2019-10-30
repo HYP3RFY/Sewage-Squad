@@ -74,6 +74,8 @@ delay(100);
 
 Odometry::Init();
 
+Tray::Init(&trayMotor, &pot);
+
 lcd::register_btn1_cb(on_center_button);
 }
 
@@ -131,19 +133,20 @@ void autonomous() {
   arm.move_velocity(100);
 	trayMotor.move_velocity(-10);
 	delay(250);
-	trayMotor.move_velocity(-10);
 	arm.move_velocity(40);
+	trayMotor.move_velocity(-10);
 	delay(250);
 	arm.move_velocity(100);
-	trayMotor.move_velocity(0);
-	delay(1500);
+	delay(1600);
 	arm.move_velocity(-100);
-	delay(500);
+	delay(400);
 	arm.move_velocity(0);
 
 
 //Put Auton Code Here:
 	if (autonName == "Red Square"){
+		delay(20);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15));
@@ -188,7 +191,7 @@ void opcontrol() {
 	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	trayMotor.set_gearing(MOTOR_GEARSET_36);
 	//Initialize Tray Code
-	Tray::Init(&trayMotor, &pot);
+
 	delay(100);
 //------------------------------------------------------------------------------
 	if (armUnfold == true){
