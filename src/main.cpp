@@ -18,7 +18,6 @@ using namespace Subsystems;
 bool armUnfold = true;
 std::string autonName = "Red Square";
 
-
 Controller master(E_CONTROLLER_MASTER);
 Motor leftFrontMtr(2);
 Motor rightFrontMtr(1);
@@ -45,38 +44,38 @@ void on_center_button() {
 void initialize() {
 	lcd::initialize();
 
-auto brake = MOTOR_BRAKE_BRAKE;
+	auto brake = MOTOR_BRAKE_BRAKE;
 
-Odometry::Movement::OdometryMotor* frontLeftCMtr = new Odometry::Movement::OdometryMotor(2, false, MOTOR_GEARSET_18);
-frontLeftCMtr->motor->set_brake_mode(brake);
+	Odometry::Movement::OdometryMotor* frontLeftCMtr = new Odometry::Movement::OdometryMotor(2, false, MOTOR_GEARSET_18);
+	frontLeftCMtr->motor->set_brake_mode(brake);
 
-Odometry::Movement::OdometryMotor* backLeftCMtr = new Odometry::Movement::OdometryMotor(4, false, MOTOR_GEARSET_18);
-backLeftCMtr->motor->set_brake_mode(brake);
+	Odometry::Movement::OdometryMotor* backLeftCMtr = new Odometry::Movement::OdometryMotor(4, false, MOTOR_GEARSET_18);
+	backLeftCMtr->motor->set_brake_mode(brake);
 
-Odometry::Movement::OdometryMotor* backRightCMtr = new Odometry::Movement::OdometryMotor(3, true, MOTOR_GEARSET_18);
-backRightCMtr->motor->set_brake_mode(brake);
+	Odometry::Movement::OdometryMotor* backRightCMtr = new Odometry::Movement::OdometryMotor(3, true, MOTOR_GEARSET_18);
+	backRightCMtr->motor->set_brake_mode(brake);
 
-Odometry::Movement::OdometryMotor* frontRightCMtr = new Odometry::Movement::OdometryMotor(1, true, MOTOR_GEARSET_18);
-frontRightCMtr->motor->set_brake_mode(brake);
+	Odometry::Movement::OdometryMotor* frontRightCMtr = new Odometry::Movement::OdometryMotor(1, true, MOTOR_GEARSET_18);
+	frontRightCMtr->motor->set_brake_mode(brake);
 
-ADIEncoder* leftWheelEncoder = new ADIEncoder (3, 4, true);
-ADIEncoder* rightWheelEncoder = new ADIEncoder(1, 2, false);
-ADIEncoder* backWheelEncoder = new ADIEncoder(5, 6, true);
+	ADIEncoder* leftWheelEncoder = new ADIEncoder (3, 4, true);
+	ADIEncoder* rightWheelEncoder = new ADIEncoder(1, 2, false);
+	ADIEncoder* backWheelEncoder = new ADIEncoder(5, 6, true);
 
-Odometry::SetTrackingCenterParameters(6.75,6.75,-5);
-Odometry::SetTrackingWheelEncoders(leftWheelEncoder, rightWheelEncoder, backWheelEncoder);
-Odometry::SetStartingPositionAndRotation(Odometry::Vector2(0, 0), Odometry::Angle::FromDegrees(0).GetRadianMeasure());
-Odometry::SetWheelCircumference(2.75 * 3.14159);
+	Odometry::SetTrackingCenterParameters(6.75,6.75,-5);
+	Odometry::SetTrackingWheelEncoders(leftWheelEncoder, rightWheelEncoder, backWheelEncoder);
+	Odometry::SetStartingPositionAndRotation(Odometry::Vector2(0, 0), Odometry::Angle::FromDegrees(0).GetRadianMeasure());
+	Odometry::SetWheelCircumference(2.75 * 3.14159);
 
-Odometry::Movement::SetMotorsMecanum(frontLeftCMtr, backLeftCMtr, frontRightCMtr, backRightCMtr);
+	Odometry::Movement::SetMotorsMecanum(frontLeftCMtr, backLeftCMtr, frontRightCMtr, backRightCMtr);
 
-delay(100);
+	delay(100);
 
-Odometry::Init();
+	Odometry::Init();
 
-Tray::Init(&trayMotor, &pot);
+	Tray::Init(&trayMotor, &pot);
 
-lcd::register_btn1_cb(on_center_button);
+	lcd::register_btn1_cb(on_center_button);
 }
 
 
@@ -129,18 +128,13 @@ void autonomous() {
   ADIPotentiometer pot =ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
-
-  arm.move_velocity(100);
-	trayMotor.move_velocity(-10);
-	delay(250);
-	arm.move_velocity(40);
-	trayMotor.move_velocity(-10);
-	delay(250);
-	arm.move_velocity(100);
-	delay(1600);
-	arm.move_velocity(-100);
-	delay(400);
+	Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
+  arm.move_relative(70,100);
+	delay(500);
+	arm.move_relative(-40, 100);
+	delay(500);
 	arm.move_velocity(0);
+	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 
 
 //Put Auton Code Here:
@@ -199,17 +193,13 @@ void opcontrol() {
 	}
 
 	bool moveBack = false;
-	Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
-	delay(10);
-	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-
 	bool goBack = true;
 	bool liftToggle = false;
 	//Main Motion Loop
 	while (true) {
 		//Display Pot Value
 		//pros::lcd::print(0, "%d", pot.get_value());
-		//lcd::print(4, "%f", arm.get_position());
+		lcd::print(4, "%f", arm.get_position());
 
 		//Display Odometry values
 		lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());

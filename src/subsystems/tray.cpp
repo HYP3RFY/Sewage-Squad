@@ -3,18 +3,17 @@
 #include "pros/rtos.h"
 
 namespace Subsystems::Tray{
-
   int target = TrayPosition::Storage;
 
   pros::Mutex* mutex;
 
   int GetTarget(){
     mutex->take(10000);
-    int t;
+    int t = 845;
     if (target == TrayPosition::Storage) {
       t = 845;
     } else if (target == TrayPosition::Push) {
-      t = 1630;
+      t = 1640;
     } else if (target == TrayPosition::Stack) {
       t = 1000;
     }
@@ -41,8 +40,7 @@ namespace Subsystems::Tray{
 
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);
-
-      trayMotor->move_velocity(error*.08);
+      trayMotor->move_velocity(error*.85);
 
       pros::Task::delay(50);
     }
