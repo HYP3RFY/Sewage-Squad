@@ -128,19 +128,17 @@ void autonomous() {
   ADIPotentiometer pot =ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
-/*
 	trayMotor.move_velocity(-1);
-  arm.move_relative(3000,100);
+  arm.move_relative(3500,100);
 	delay(400);
 	arm.move_velocity(-100);
 	delay(300);
-	arm.move_relative(3000,100);
+	arm.move_relative(4000,100);
 	delay(800);
-	arm.move_relative(-2800, 100);
+	arm.move_relative(-3200, 100);
 	delay(800);
 	arm.move_velocity(0);
 	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-*/
 
 //Put Auton Code Here:
 	if (autonName == "Red Square"){
@@ -168,9 +166,12 @@ void autonomous() {
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
 		delay(100);
+		leftIntake.move_velocity(100);
+		rightIntake.move_velocity(-100);
+		delay(200);
 		leftIntake.move_velocity(-100);
 		rightIntake.move_velocity(100);
-		delay(100);
+		delay(87);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(200);
 		leftIntake.move_velocity(-15);
@@ -191,12 +192,51 @@ void autonomous() {
 	}else if(autonName == "Blue Square"){
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
-		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.08,-.25),PIDSettings(2,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(33,-6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.08,-.01),PIDSettings(3,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(45,-6),Odometry::Angle::FromDegrees(0),PIDSettings(5,.08,-.1),PIDSettings(2,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(9.7,-10),Odometry::Angle::FromDegrees(0),PIDSettings(6,.08,-.1),PIDSettings(2,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(11,-21),Odometry::Angle::FromDegrees(0),PIDSettings(6,.08,-.1),PIDSettings(2,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(33,-21),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.08,-.25),PIDSettings(3,.01,-.15));
+		delay(20);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+		leftIntake.move_velocity(200);
+		rightIntake.move_velocity(-200);
+
+		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(35,-7),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.0005),2.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(44,-6.5),Odometry::Angle::FromDegrees(0),PIDSettings(6,.25,-.005),PIDSettings(5,.2,-.05),3);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(20,5.7),Odometry::Angle::FromDegrees(135),PIDSettings(7,.5,-.0005),PIDSettings(5,.3,-.05),3);
+		delay(20);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+
+		leftFrontMtr.move_velocity(80);
+		rightFrontMtr.move_velocity(-80);
+		leftBackMtr.move_velocity(80);
+		rightBackMtr.move_velocity(-80);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+		delay(1500);
+		leftFrontMtr.move_velocity(0);
+		rightFrontMtr.move_velocity(0);
+		leftBackMtr.move_velocity(0);
+		rightBackMtr.move_velocity(0);
+		delay(100);
+		leftIntake.move_velocity(100);
+		rightIntake.move_velocity(-100);
+		delay(200);
+		leftIntake.move_velocity(-100);
+		rightIntake.move_velocity(100);
+		delay(87);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
+		delay(200);
+		leftIntake.move_velocity(-15);
+		rightIntake.move_velocity(15);
+		leftFrontMtr.move_velocity(-10);
+		rightFrontMtr.move_velocity(10);
+		leftBackMtr.move_velocity(-10);
+		rightBackMtr.move_velocity(10);
+		delay(4000);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+		leftFrontMtr.move_velocity(0);
+		rightFrontMtr.move_velocity(0);
+		leftBackMtr.move_velocity(0);
+		rightBackMtr.move_velocity(0);
 	}else if(autonName == "Blue Rectangle"){
 
 	}else if(autonName == "Skills"){
@@ -296,12 +336,6 @@ void opcontrol() {
 		}
 
 	//Potentiometer value for bool value to stack cubes
-	//Lift mechanism, pulls tray up a bit so arms can lift
-		if (master.get_digital(DIGITAL_X)){
-			Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
-			liftToggle = true;
-			delay(20);
-		}
 		//ARM cODE
 		if (master.get_digital(DIGITAL_R1)){
 			arm.move_velocity(200);
@@ -332,6 +366,10 @@ void opcontrol() {
 				leftBackMtr.move_velocity(-10);
 				rightBackMtr.move_velocity(10);
 				}
+				delay(20);
+			} else if (master.get_digital(DIGITAL_X)){
+				Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
+				liftToggle = true;
 				delay(20);
 			}
 		//Intake Rollers

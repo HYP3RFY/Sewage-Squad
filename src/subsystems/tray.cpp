@@ -13,7 +13,7 @@ namespace Subsystems::Tray{
     if (target == TrayPosition::Storage) {
       t = 845;
     } else if (target == TrayPosition::Push) {
-      t = 1730;
+      t = 1750;
     } else if (target == TrayPosition::Stack) {
       t = 1000;
     }
@@ -36,7 +36,7 @@ namespace Subsystems::Tray{
 
       int error = currentPos - GetTarget();
 
-      if (abs(error) < 35) error = 0;
+      if (abs(error) < 30) error = 0;
 
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);
