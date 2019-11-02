@@ -16,7 +16,7 @@ using namespace pros;
 using namespace Subsystems;
 
 bool armUnfold = true;
-std::string autonName = "Red Square";
+std::string autonName = "Blue Square";//Blue Square Red Square
 
 Controller master(E_CONTROLLER_MASTER);
 Motor leftFrontMtr(2);
@@ -83,24 +83,7 @@ void disabled() {
 }
 
 void competition_initialize() {
-//put auton selector here
-	Controller master(E_CONTROLLER_MASTER);
-	lcd::print(1, "%s", autonName);
-
- if (master.get_digital(DIGITAL_R1)){
-	 autonName = "Red Square";
- }else if (master.get_digital(DIGITAL_R2)){
-	 autonName = "Red Rectangle";
- }else if (master.get_digital(DIGITAL_L1)){
-	 autonName = "Blue Square";
- }else if (master.get_digital(DIGITAL_L2)){
-	 autonName = "Blue Rectangle";
- }else if (master.get_digital(DIGITAL_X)){
-	 autonName = "Skills";
- }else {
-	 autonName = "none";
- }
-delay(20);
+		lcd::print(1, "%s", autonName);
 }
 
 void autonomous() {
@@ -128,15 +111,17 @@ void autonomous() {
   ADIPotentiometer pot =ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
-	trayMotor.move_velocity(-1);
+	trayMotor.move_velocity(-5);
   arm.move_relative(3500,100);
 	delay(400);
 	arm.move_velocity(-100);
+	delay(200);
+	trayMotor.move_velocity(-5);
+	arm.move_relative(15000,100);
+	delay(1000);
+	trayMotor.move_velocity(0);
+	arm.move_relative(-2000, 100);//was -3200, change code in OPCONTROL also for arm armUnfold
 	delay(300);
-	arm.move_relative(4000,100);
-	delay(800);
-	arm.move_relative(-3200, 100);
-	delay(800);
 	arm.move_velocity(0);
 	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 
@@ -171,7 +156,7 @@ void autonomous() {
 		delay(200);
 		leftIntake.move_velocity(-100);
 		rightIntake.move_velocity(100);
-		delay(87);
+		delay(80);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(200);
 		leftIntake.move_velocity(-15);
@@ -221,7 +206,7 @@ void autonomous() {
 		delay(200);
 		leftIntake.move_velocity(-100);
 		rightIntake.move_velocity(100);
-		delay(87);
+		delay(80);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(200);
 		leftIntake.move_velocity(-15);
