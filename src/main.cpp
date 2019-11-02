@@ -128,14 +128,19 @@ void autonomous() {
   ADIPotentiometer pot =ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
-	Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
-  arm.move_relative(70,100);
-	delay(500);
-	arm.move_relative(-40, 100);
-	delay(500);
+/*
+	trayMotor.move_velocity(-1);
+  arm.move_relative(3000,100);
+	delay(400);
+	arm.move_velocity(-100);
+	delay(300);
+	arm.move_relative(3000,100);
+	delay(800);
+	arm.move_relative(-2800, 100);
+	delay(800);
 	arm.move_velocity(0);
 	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-
+*/
 
 //Put Auton Code Here:
 	if (autonName == "Red Square"){
@@ -143,19 +148,47 @@ void autonomous() {
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
-		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(38,6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.3,-.0001),PIDSettings(5,.2,-.05),1.5);
-		Odometry::Movement::MoveLinear(Odometry::Vector2(45,6),Odometry::Angle::FromDegrees(0),PIDSettings(6,.3,-.005),PIDSettings(5,.2,-.05),1.5);
-		Odometry::Movement::MoveLinear(Odometry::Vector2(15.5,12.7),Odometry::Angle::FromDegrees(-180),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(9,12.7),Odometry::Angle::FromDegrees(-180),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
-		Odometry::Movement::MoveLinear(Odometry::Vector2(5.3,-8.8),Odometry::Angle::FromDegrees(-135),PIDSettings(7,.2,-.05),PIDSettings(5,.2,-.05));
+
+		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(35,7),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.0005),2.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(44,6.5),Odometry::Angle::FromDegrees(0),PIDSettings(6,.25,-.005),PIDSettings(5,.2,-.05),3);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(20,-5.7),Odometry::Angle::FromDegrees(-135),PIDSettings(7,.5,-.0005),PIDSettings(5,.3,-.05),3);
+		delay(20);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+
+		leftFrontMtr.move_velocity(80);
+		rightFrontMtr.move_velocity(-80);
+		leftBackMtr.move_velocity(80);
+		rightBackMtr.move_velocity(-80);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+		delay(1500);
+		leftFrontMtr.move_velocity(0);
+		rightFrontMtr.move_velocity(0);
+		leftBackMtr.move_velocity(0);
+		rightBackMtr.move_velocity(0);
+		delay(100);
+		leftIntake.move_velocity(-100);
+		rightIntake.move_velocity(100);
+		delay(100);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
+		delay(200);
+		leftIntake.move_velocity(-15);
+		rightIntake.move_velocity(15);
+		leftFrontMtr.move_velocity(-10);
+		rightFrontMtr.move_velocity(10);
+		leftBackMtr.move_velocity(-10);
+		rightBackMtr.move_velocity(10);
+		delay(4000);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+		leftFrontMtr.move_velocity(0);
+		rightFrontMtr.move_velocity(0);
+		leftBackMtr.move_velocity(0);
+		rightBackMtr.move_velocity(0);
 	}else if(autonName == "Red Rectangle"){
 
 	}else if(autonName == "Blue Square"){
-
-	}else if(autonName == "Blue Rectangle"){
-
-	}else if(autonName == "Skills"){
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.08,-.25),PIDSettings(2,.01,-.15));
@@ -164,7 +197,35 @@ void autonomous() {
 		Odometry::Movement::MoveLinear(Odometry::Vector2(9.7,-10),Odometry::Angle::FromDegrees(0),PIDSettings(6,.08,-.1),PIDSettings(2,.01,-.15));
 		Odometry::Movement::MoveLinear(Odometry::Vector2(11,-21),Odometry::Angle::FromDegrees(0),PIDSettings(6,.08,-.1),PIDSettings(2,.01,-.15));
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,-21),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.08,-.25),PIDSettings(3,.01,-.15));
-	}
+	}else if(autonName == "Blue Rectangle"){
+
+	}else if(autonName == "Skills"){
+		delay(20);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
+		delay(200);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+		delay(10);
+		leftIntake.move_velocity(200);
+		rightIntake.move_velocity(-200);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(36,6),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.05),2);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(44,6.5),Odometry::Angle::FromDegrees(0),PIDSettings(6,.25,-.005),PIDSettings(5,.2,-.05),3);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(16,9),Odometry::Angle::FromDegrees(-180),PIDSettings(6,.25,-.0001),PIDSettings(6,.3,-.005),3);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(9,9),Odometry::Angle::FromDegrees(-180),PIDSettings(6,.25,-.0001),PIDSettings(6,.3,-.005),3);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(20,-5.7),Odometry::Angle::FromDegrees(-135),PIDSettings(5,.3,-.05),PIDSettings(4,.3,-.05),1.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(8.2,-14.5),Odometry::Angle::FromDegrees(-135),PIDSettings(5,.2,-.05),PIDSettings(4,.2,-.05),1.5);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
+		delay(500);
+		leftIntake.move_velocity(100);
+		rightIntake.move_velocity(-100);
+		delay(400);
+		leftIntake.move_velocity(-15);
+		rightIntake.move_velocity(15);
+		leftFrontMtr.move_velocity(-10);
+		rightFrontMtr.move_velocity(10);
+		leftBackMtr.move_velocity(-10);
+		rightBackMtr.move_velocity(10);
+		delay(3000);	}
 	delay(20);
 }
 
@@ -189,7 +250,17 @@ void opcontrol() {
 	delay(100);
 //------------------------------------------------------------------------------
 	if (armUnfold == true){
-//put unfolding arms here
+		trayMotor.move_velocity(-1);
+	  arm.move_relative(3000,100);
+		delay(400);
+		arm.move_velocity(-100);
+		delay(300);
+		arm.move_relative(3000,100);
+		delay(800);
+		arm.move_relative(-2800, 100);
+		delay(800);
+		arm.move_velocity(0);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 	}
 
 	bool moveBack = false;
