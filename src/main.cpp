@@ -5,18 +5,18 @@
 #include "odometry/angle.h"
 #include "odometry/mecanum.h"
 #include "pidparams.h"
+#include <thread>
 
 #define DEADZONE(x) fabs(x)<15?0:x
 #define THROTTLE_FORWARD ANALOG_LEFT_Y
 #define STRAFE ANALOG_LEFT_X
 #define TURN_CONTROL ANALOG_RIGHT_X
-
+std::string autonName;
 //Check here for erros:
 using namespace pros;
 using namespace Subsystems;
 
 bool armUnfold = true;
-std::string autonName = "Blue Square";//Blue Square Red Square
 
 Controller master(E_CONTROLLER_MASTER);
 Motor leftFrontMtr(2);
@@ -28,7 +28,7 @@ Motor arm(12);
 Motor leftIntake(15);
 Motor rightIntake(14);
 ADIPotentiometer pot = ADIPotentiometer('h');
-
+ADIPotentiometer autonSelector = ADIPotentiometer('g');
 
 
 void on_center_button() {
@@ -39,6 +39,33 @@ void on_center_button() {
 	} else {
 		lcd::clear_line(2);
 	}
+}
+
+pros::Task* SelectAutonTask;
+
+void AutonSelector(void* params){
+
+	lcd::print(5, "%s", "BlueS 4-3k|Skills 3-2k|RedS 2-1k|None 1k-0");
+	while(true){
+		if (autonSelector.get_value() <= 1000) {
+			autonName = "None";
+		}else if (autonSelector.get_value() <= 2000) {
+			autonName = "Red Square";
+		}else if (autonSelector.get_value() <= 3000) {
+			autonName = "Skills";
+		}else if (autonSelector.get_value() <= 4000) {
+			autonName = "Blue Square";
+		}
+	lcd::print(6, "%s", autonName);
+	delay(50);
+	}
+}
+
+void autonSelectorMethod() {
+	bool autonSelectRunning = true;
+	//spawn thread
+	std::string SelectAutonTaskName("Auton Selector Thread");
+	SelectAutonTask = new pros::Task(AutonSelector, &SelectAutonTaskName);
 }
 
 void initialize() {
@@ -78,12 +105,12 @@ void initialize() {
 	lcd::register_btn1_cb(on_center_button);
 }
 
-
 void disabled() {
+  autonSelectorMethod();
 }
 
 void competition_initialize() {
-		lcd::print(1, "%s", autonName);
+  autonSelectorMethod();
 }
 
 void autonomous() {
@@ -120,7 +147,7 @@ void autonomous() {
 	arm.move_relative(15000,100);
 	delay(1000);
 	trayMotor.move_velocity(0);
-	arm.move_relative(-2000, 100);//was -3200, change code in OPCONTROL also for arm armUnfold
+	arm.move_relative(-2000, 100);
 	delay(300);
 	arm.move_velocity(0);
 	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
@@ -172,8 +199,6 @@ void autonomous() {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonName == "Red Rectangle"){
-
 	}else if(autonName == "Blue Square"){
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
@@ -222,8 +247,6 @@ void autonomous() {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonName == "Blue Rectangle"){
-
 	}else if(autonName == "Skills"){
 		delay(20);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
@@ -250,7 +273,8 @@ void autonomous() {
 		rightFrontMtr.move_velocity(10);
 		leftBackMtr.move_velocity(-10);
 		rightBackMtr.move_velocity(10);
-		delay(3000);	}
+		delay(3000);
+	}
 	delay(20);
 }
 
@@ -274,7 +298,7 @@ void opcontrol() {
 
 	delay(100);
 //------------------------------------------------------------------------------
-	if (armUnfold == true){
+/*	if (armUnfold == true){
 		trayMotor.move_velocity(-1);
 	  arm.move_relative(3000,100);
 		delay(400);
@@ -287,12 +311,17 @@ void opcontrol() {
 		arm.move_velocity(0);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 	}
+*/
 
 	bool moveBack = false;
 	bool goBack = true;
 	bool liftToggle = false;
 	//Main Motion Loop
+
+
+
 	while (true) {
+
 		//Display Pot Value
 		//pros::lcd::print(0, "%d", pot.get_value());
 		lcd::print(4, "%f", arm.get_position());
