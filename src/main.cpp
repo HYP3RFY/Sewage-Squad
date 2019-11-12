@@ -25,8 +25,8 @@ Motor leftBackMtr(4);
 Motor rightBackMtr(3);
 Motor trayMotor(11);
 Motor arm(12);
-Motor leftIntake(15);
-Motor rightIntake(14);
+Motor leftIntake(17);//14 15 dead
+Motor rightIntake(16);
 ADIPotentiometer pot = ADIPotentiometer('h');
 ADIPotentiometer autonSelector = ADIPotentiometer('g');
 
@@ -120,8 +120,8 @@ void autonomous() {
 	Motor rightBackMtr(3);
 	Motor trayMotor(11);
   Motor arm(12);
-	Motor leftIntake(15);
-	Motor rightIntake(14);
+	Motor leftIntake(17);
+	Motor rightIntake(16);
 
 	leftFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	rightFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
@@ -131,27 +131,21 @@ void autonomous() {
   arm.set_brake_mode(MOTOR_BRAKE_HOLD);
   trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
   trayMotor.set_gearing(MOTOR_GEARSET_36);
-  arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+  arm.set_brake_mode(MOTOR_BRAKE_COAST);
 
 
 	armUnfold = false;
   ADIPotentiometer pot =ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
-	trayMotor.move_velocity(-5);
-  arm.move_relative(3500,100);
+	trayMotor.move_velocity(-10);
+  arm.move_relative(4000,100);
 	delay(400);
-	arm.move_velocity(-100);
-	delay(200);
-	trayMotor.move_velocity(-5);
-	arm.move_relative(15000,100);
-	delay(1000);
 	trayMotor.move_velocity(0);
-	arm.move_relative(-2000, 100);
-	delay(300);
+	arm.move_velocity(100);
+	delay(10);
 	arm.move_velocity(0);
-	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-
+ //arm.move_relative(-1500,100);
 //Put Auton Code Here:
 	if (autonName == "Red Square"){
 		delay(20);
@@ -312,10 +306,7 @@ void opcontrol() {
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 	}
 */
-
-	bool moveBack = false;
 	bool goBack = true;
-	bool liftToggle = false;
 	//Main Motion Loop
 
 
@@ -340,16 +331,6 @@ void opcontrol() {
 		rightFrontMtr.move_velocity(turn - throttle - strafe);
 		rightBackMtr.move_velocity(turn - throttle + strafe);
 
-		//Stacks Cubes and backs up automatically
-		if (pot.get_value() >= 1600 && goBack) {
-
-
-			delay(3000);
-			Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-			goBack=false;
-		}
-
-	//Potentiometer value for bool value to stack cubes
 		//ARM cODE
 		if (master.get_digital(DIGITAL_R1)){
 			arm.move_velocity(200);
@@ -358,18 +339,12 @@ void opcontrol() {
 		} else {
 			arm.move_velocity(0);
 		}
-		//Arm Code
-		if (liftToggle == true){
-			if (pot.get_value() >= 980){
-				liftToggle = false;
-			}
-		}
 
 		//Push Tray to Stack Cubes
-		if (master.get_digital(DIGITAL_A)){
+		if (master.get_digital_new_press(DIGITAL_A)){
 			Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 			//Store Cubes
-		} else if (master.get_digital(DIGITAL_B)) {
+		} else if (master.get_digital_new_press(DIGITAL_B)) {
 			Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 		} else if (master.get_digital_new_press(DIGITAL_Y)){
 			while (master.get_digital_new_press(DIGITAL_Y) == false) {
@@ -381,9 +356,8 @@ void opcontrol() {
 				rightBackMtr.move_velocity(10);
 				}
 				delay(20);
-			} else if (master.get_digital(DIGITAL_X)){
+			} else if (master.get_digital_new_press(DIGITAL_X)){
 				Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
-				liftToggle = true;
 				delay(20);
 			}
 		//Intake Rollers
