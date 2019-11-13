@@ -1,7 +1,7 @@
 #include "main.h"
 #include "subsystems/tray.h"
 #include "pros/rtos.h"
-
+int t;
 namespace Subsystems::Tray{
   int target = TrayPosition::Storage;
 
@@ -40,8 +40,11 @@ namespace Subsystems::Tray{
 
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);
-      trayMotor->move_velocity(error*.15);
-
+      if (target == TrayPosition::Push) {
+        trayMotor->move_velocity(error*.08);
+      } else if (target == TrayPosition::Storage || target == TrayPosition::Stack ){
+        trayMotor->move_velocity(error*.2);
+      }
       pros::Task::delay(50);
     }
   }
