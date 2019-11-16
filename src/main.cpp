@@ -26,10 +26,9 @@ Motor rightBackMtr(3);
 Motor trayMotor(11);
 Motor arm(12);
 Motor leftIntake(17);//14 15 dead
-Motor rightIntake(16);
+Motor rightIntake(19);
 ADIPotentiometer pot = ADIPotentiometer('h');
 ADIPotentiometer autonSelector = ADIPotentiometer('g');
-
 
 void on_center_button() {
 	static bool pressed = false;
@@ -45,7 +44,6 @@ pros::Task* SelectAutonTask;
 
 void AutonSelector(void* params){
 
-	lcd::print(5, "%s", "BlueS 4-3k|Skills 3-2k|RedS 2-1k|None 1k-0");
 	while(true){
 		if (autonSelector.get_value() <= 1000) {
 			autonName = "None";
@@ -114,15 +112,6 @@ void competition_initialize() {
 }
 
 void autonomous() {
-	Motor leftFrontMtr(2);
-	Motor rightFrontMtr(1);
-	Motor leftBackMtr(4);
-	Motor rightBackMtr(3);
-	Motor trayMotor(11);
-  Motor arm(12);
-	Motor leftIntake(17);
-	Motor rightIntake(16);
-
 	leftFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	rightFrontMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	leftBackMtr.set_brake_mode(MOTOR_BRAKE_BRAKE);
@@ -138,48 +127,69 @@ void autonomous() {
   ADIPotentiometer pot =ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
-	trayMotor.move_velocity(-10);
+
+	/*trayMotor.move_velocity(-10);
   arm.move_relative(4000,100);
 	delay(400);
 	trayMotor.move_velocity(0);
 	arm.move_velocity(100);
 	delay(10);
 	arm.move_velocity(0);
+*/
  //arm.move_relative(-1500,100);
+
 //Put Auton Code Here:
-	if (autonName == "Red Square"){
+delay(20);
+if (autonSelector.get_value() <= 1000) {
+	autonName = "None";
+	delay(20);
+}else if (autonSelector.get_value() <= 2000) {
+	autonName = "Red Square";
+	delay(20);
+}else if (autonSelector.get_value() <= 3000) {
+	autonName = "Skills";
+	delay(20);
+}else if (autonSelector.get_value() <= 4000) {
+	autonName = "Blue Square";
+	delay(20);
+}
+
+	if (autonSelector.get_value() <= 2000){
 		delay(20);
-		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
-
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
-		Odometry::Movement::MoveLinear(Odometry::Vector2(35,7),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.0005),2.5);
-		Odometry::Movement::MoveLinear(Odometry::Vector2(44,6.5),Odometry::Angle::FromDegrees(0),PIDSettings(6,.25,-.005),PIDSettings(5,.2,-.05),3);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(35,8),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.0005),2.5);
+		Odometry::Movement::MoveLinear(Odometry::Vector2(44,8),Odometry::Angle::FromDegrees(0),PIDSettings(6,.25,-.005),PIDSettings(5,.2,-.05),3);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(20,-5.7),Odometry::Angle::FromDegrees(-135),PIDSettings(7,.5,-.0005),PIDSettings(5,.3,-.05),3);
-		delay(20);
+		delay(60);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
-
+		delay(60);
+		leftIntake.move_velocity(-100);
+		rightIntake.move_velocity(100);
+		delay(450);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+		delay(20);
 		leftFrontMtr.move_velocity(80);
 		rightFrontMtr.move_velocity(-80);
 		leftBackMtr.move_velocity(80);
 		rightBackMtr.move_velocity(-80);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-		delay(1500);
+		delay(1130);
 		leftFrontMtr.move_velocity(0);
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-		delay(100);
-		leftIntake.move_velocity(100);
-		rightIntake.move_velocity(-100);
-		delay(200);
-		leftIntake.move_velocity(-100);
-		rightIntake.move_velocity(100);
-		delay(80);
+		delay(20);
+		leftIntake.move_velocity(5);
+		rightIntake.move_velocity(-5);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
-		delay(200);
+		delay(800);
+		leftIntake.move_velocity(0);
+		rightIntake.move_velocity(0);
+		delay(20);
 		leftIntake.move_velocity(-15);
 		rightIntake.move_velocity(15);
 		leftFrontMtr.move_velocity(-10);
@@ -193,7 +203,7 @@ void autonomous() {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonName == "Blue Square"){
+	}else if(autonSelector.get_value() <= 4000){
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		delay(20);
@@ -227,6 +237,11 @@ void autonomous() {
 		rightIntake.move_velocity(100);
 		delay(80);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
+		delay(800);
+		leftFrontMtr.move_velocity(80);
+		rightFrontMtr.move_velocity(-80);
+		leftBackMtr.move_velocity(80);
+		rightBackMtr.move_velocity(-80);
 		delay(200);
 		leftIntake.move_velocity(-15);
 		rightIntake.move_velocity(15);
@@ -241,7 +256,7 @@ void autonomous() {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonName == "Skills"){
+	}else if(autonSelector.get_value() <= 3000){
 		delay(20);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
 		delay(200);
@@ -309,13 +324,10 @@ void opcontrol() {
 	bool goBack = true;
 	//Main Motion Loop
 
-
-
 	while (true) {
-
 		//Display Pot Value
 		//pros::lcd::print(0, "%d", pot.get_value());
-		lcd::print(4, "%f", arm.get_position());
+
 
 		//Display Odometry values
 		lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
