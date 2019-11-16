@@ -17,6 +17,7 @@ using namespace pros;
 using namespace Subsystems;
 
 bool armUnfold = true;
+int autonNumber;
 
 Controller master(E_CONTROLLER_MASTER);
 Motor leftFrontMtr(2);
@@ -140,19 +141,23 @@ void autonomous() {
 delay(20);
 if (autonSelector.get_value() <= 1000) {
 	autonName = "None";
+	autonNumber = 0;
 	delay(20);
 }else if (autonSelector.get_value() <= 2000) {
 	autonName = "Red Square";
+	autonNumber = 1;
 	delay(20);
 }else if (autonSelector.get_value() <= 3000) {
 	autonName = "Skills";
+	autonNumber = 2;
 	delay(20);
 }else if (autonSelector.get_value() <= 4000) {
 	autonName = "Blue Square";
+	autonNumber = 3;
 	delay(20);
 }
 
-	if (autonSelector.get_value() <= 2000){
+	if 	(autonNumber == 1){
 		delay(20);
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
@@ -166,7 +171,7 @@ if (autonSelector.get_value() <= 1000) {
 		delay(60);
 		leftIntake.move_velocity(-100);
 		rightIntake.move_velocity(100);
-		delay(450);
+		delay(460);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
 		delay(20);
@@ -181,8 +186,8 @@ if (autonSelector.get_value() <= 1000) {
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
 		delay(20);
-		leftIntake.move_velocity(10);
-		rightIntake.move_velocity(-10);
+		leftIntake.move_velocity(15);
+		rightIntake.move_velocity(-15);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(800);
 		leftIntake.move_velocity(0);
@@ -201,7 +206,7 @@ if (autonSelector.get_value() <= 1000) {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonSelector.get_value() <= 3000){
+	}else if(autonNumber == 2){
 		delay(20);
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
@@ -215,7 +220,7 @@ if (autonSelector.get_value() <= 1000) {
 		delay(60);
 		leftIntake.move_velocity(-100);
 		rightIntake.move_velocity(100);
-		delay(450);
+		delay(460);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
 		delay(20);
@@ -230,8 +235,8 @@ if (autonSelector.get_value() <= 1000) {
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
 		delay(20);
-		leftIntake.move_velocity(10);
-		rightIntake.move_velocity(-10);
+		leftIntake.move_velocity(15);
+		rightIntake.move_velocity(-15);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(800);
 		leftIntake.move_velocity(0);
@@ -250,7 +255,7 @@ if (autonSelector.get_value() <= 1000) {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonSelector.get_value() <= 4000){
+	}else if(autonNumber == 3){
 		delay(20);
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
@@ -264,7 +269,7 @@ if (autonSelector.get_value() <= 1000) {
 		delay(60);
 		leftIntake.move_velocity(-100);
 		rightIntake.move_velocity(100);
-		delay(450);
+		delay(460);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
 		delay(20);
@@ -279,8 +284,8 @@ if (autonSelector.get_value() <= 1000) {
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
 		delay(20);
-		leftIntake.move_velocity(10);
-		rightIntake.move_velocity(-10);
+		leftIntake.move_velocity(15);
+		rightIntake.move_velocity(-15);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(800);
 		leftIntake.move_velocity(0);
