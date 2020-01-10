@@ -26,8 +26,8 @@ Motor leftBackMtr(4);
 Motor rightBackMtr(3);
 Motor trayMotor(11);
 Motor arm(12);
-Motor leftIntake(17);//14 15 dead
-Motor rightIntake(19);
+Motor leftIntake(10);//14 15 dead
+Motor rightIntake(9);
 ADIPotentiometer pot = ADIPotentiometer('h');
 ADIPotentiometer autonSelector = ADIPotentiometer('g');
 
