@@ -9,13 +9,11 @@ namespace Subsystems::Tray{
 
   int GetTarget(){
     mutex->take(10000);
-    int t = 845;
+    int t = 1400;
     if (target == TrayPosition::Storage) {
-      t = 845;
-    } else if (target == TrayPosition::Push) {
-      t = 1750;
+      t = 1400;
     } else if (target == TrayPosition::Stack) {
-      t = 1000;
+      t = 4000;
     }
     mutex->give();
     return t;
@@ -40,11 +38,15 @@ namespace Subsystems::Tray{
 
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);
-      if (target == TrayPosition::Push) {
-        trayMotor->move_velocity(error*.08);
-      } else if (target == TrayPosition::Storage || target == TrayPosition::Stack ){
-        trayMotor->move_velocity(error*.2);
-      }
+      pros::lcd::print(5, "%f", (float)GetTarget());
+
+    /*  double speedMultiplier = 1;
+      if (target == TrayPosition::Stack){
+        if (currentPos < 400) speedMultiplier = .2;
+        if (currentPos > 0) speedMultiplier = .2;
+      }*/
+      trayMotor->move_velocity(error*.15/*speedMultiplier*/);
+
       pros::Task::delay(50);
     }
   }

@@ -31,6 +31,7 @@ Motor rightIntake(9);
 ADIPotentiometer pot = ADIPotentiometer('h');
 ADIPotentiometer autonSelector = ADIPotentiometer('g');
 
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -70,6 +71,7 @@ void autonSelectorMethod() {
 void initialize() {
 	lcd::initialize();
 
+	trayMotor.set_reversed(true);
 	auto brake = MOTOR_BRAKE_BRAKE;
 
 	Odometry::Movement::OdometryMotor* frontLeftCMtr = new Odometry::Movement::OdometryMotor(2, false, MOTOR_GEARSET_18);
@@ -188,7 +190,6 @@ if (autonSelector.get_value() <= 1000) {
 		delay(20);
 		leftIntake.move_velocity(15);
 		rightIntake.move_velocity(-15);
-		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(800);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
@@ -237,7 +238,6 @@ if (autonSelector.get_value() <= 1000) {
 		delay(20);
 		leftIntake.move_velocity(15);
 		rightIntake.move_velocity(-15);
-		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(800);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
@@ -286,7 +286,6 @@ if (autonSelector.get_value() <= 1000) {
 		delay(20);
 		leftIntake.move_velocity(15);
 		rightIntake.move_velocity(-15);
-		Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 		delay(800);
 		leftIntake.move_velocity(0);
 		rightIntake.move_velocity(0);
@@ -328,20 +327,18 @@ void opcontrol() {
 
 	delay(100);
 //------------------------------------------------------------------------------
-/*	if (armUnfold == true){
-		trayMotor.move_velocity(-1);
-	  arm.move_relative(3000,100);
-		delay(400);
-		arm.move_velocity(-100);
-		delay(300);
-		arm.move_relative(3000,100);
-		delay(800);
-		arm.move_relative(-2800, 100);
-		delay(800);
-		arm.move_velocity(0);
+	if (armUnfold == true){
+		trayMotor.move_velocity(-90);
+		rightIntake.move_velocity(100);
+		leftIntake.move_velocity(-100);
+		delay(350);
+		trayMotor.move_velocity(50);
+		rightIntake.move_velocity(100);
+		leftIntake.move_velocity(-100);
+		delay(1200);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 	}
-*/
+
 	bool goBack = true;
 	//Main Motion Loop
 
@@ -374,10 +371,8 @@ void opcontrol() {
 		}
 
 		//Push Tray to Stack Cubes
-		if (master.get_digital_new_press(DIGITAL_A)){
-			Tray::MoveTrayToPosition(Tray::TrayPosition::Push);
 			//Store Cubes
-		} else if (master.get_digital_new_press(DIGITAL_B)) {
+		if (master.get_digital_new_press(DIGITAL_B)) {
 			Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 		} else if (master.get_digital_new_press(DIGITAL_Y)){
 			while (master.get_digital_new_press(DIGITAL_Y) == false) {
@@ -389,9 +384,8 @@ void opcontrol() {
 				rightBackMtr.move_velocity(10);
 				}
 				delay(20);
-			} else if (master.get_digital_new_press(DIGITAL_X)){
+			} else if (master.get_digital_new_press(DIGITAL_A)){
 				Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
-				delay(20);
 			}
 		//Intake Rollers
 		if (master.get_digital(DIGITAL_L1)){
