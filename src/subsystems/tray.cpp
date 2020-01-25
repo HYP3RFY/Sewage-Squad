@@ -38,7 +38,7 @@ namespace Subsystems::Tray{
 
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);
-      pros::lcd::print(5, "%f", (float)GetTarget());
+      pros::lcd::print(5, "TARGET: %f", (float)GetTarget());
 
     /*  double speedMultiplier = 1;
       if (target == TrayPosition::Stack){

@@ -328,14 +328,11 @@ void opcontrol() {
 	delay(100);
 //------------------------------------------------------------------------------
 	if (armUnfold == true){
-		trayMotor.move_velocity(-90);
+		Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
+		delay(600);
 		rightIntake.move_velocity(100);
 		leftIntake.move_velocity(-100);
-		delay(350);
-		trayMotor.move_velocity(50);
-		rightIntake.move_velocity(100);
-		leftIntake.move_velocity(-100);
-		delay(1200);
+		delay(200);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
 	}
 
