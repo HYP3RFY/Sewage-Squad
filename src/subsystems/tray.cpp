@@ -9,11 +9,11 @@ namespace Subsystems::Tray{
 
   int GetTarget(){
     mutex->take(10000);
-    int t = 1400;
+    int t = 120;
     if (target == TrayPosition::Storage) {
-      t = 1400;
+      t = 120;
     } else if (target == TrayPosition::Stack) {
-      t = 4000;
+      t = 2200;
     }
     mutex->give();
     return t;
@@ -34,7 +34,7 @@ namespace Subsystems::Tray{
 
       int error = currentPos - GetTarget();
 
-      if (abs(error) < 30) error = 0;
+      if (abs(error) < 20) error = 0;
 
       pros::lcd::print(3, "%f", (float)currentPos);
       pros::lcd::print(4, "%f", (float)error);

@@ -12,12 +12,14 @@
 #define STRAFE ANALOG_LEFT_X
 #define TURN_CONTROL ANALOG_RIGHT_X
 std::string autonName;
+int trayPos;
 //Check here for erros:
 using namespace pros;
 using namespace Subsystems;
 
 bool armUnfold = true;
 int autonNumber;
+float slow = 1;
 
 Controller master(E_CONTROLLER_MASTER);
 Motor leftFrontMtr(2);
@@ -127,18 +129,19 @@ void autonomous() {
 
 
 	armUnfold = false;
-  ADIPotentiometer pot =ADIPotentiometer('h');
+  ADIPotentiometer pot = ADIPotentiometer('h');
   leftIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
   rightIntake.set_brake_mode(MOTOR_BRAKE_HOLD);
 
-	trayMotor.move_velocity(-10);
-  arm.move_relative(4000,100);
-	delay(400);
-	trayMotor.move_velocity(0);
-	arm.move_velocity(100);
-	delay(10);
-	arm.move_velocity(0);
-
+//PUT UNFLIP HERE
+	Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
+	leftIntake.move_velocity(-100);
+	rightIntake.move_velocity(100);
+	delay(1300);
+	Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+	leftIntake.move_velocity(-100);
+	rightIntake.move_velocity(100);
+	delay(1000);
 //Put Auton Code Here:
 delay(20);
 if (autonSelector.get_value() <= 1000) {
@@ -161,6 +164,11 @@ if (autonSelector.get_value() <= 1000) {
 
 	if 	(autonNumber == 1){
 		delay(20);
+		leftFrontMtr.move_velocity(-200);
+		leftBackMtr.move_velocity(200);
+		rightFrontMtr.move_velocity(-200);
+		rightBackMtr.move_velocity(200);
+
 		leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
@@ -207,9 +215,13 @@ if (autonSelector.get_value() <= 1000) {
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
 		rightBackMtr.move_velocity(0);
-	}else if(autonNumber == 2){
+	  } else if(autonNumber == 2){
 		delay(20);
-		leftIntake.move_velocity(200);
+		leftFrontMtr.move_velocity(200);
+		leftBackMtr.move_velocity(-200);
+		rightFrontMtr.move_velocity(200);
+		rightBackMtr.move_velocity(-200);
+		/*leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(35,-8),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.0005),2.5);
@@ -254,10 +266,14 @@ if (autonSelector.get_value() <= 1000) {
 		leftFrontMtr.move_velocity(0);
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
-		rightBackMtr.move_velocity(0);
+		rightBackMtr.move_velocity(0);*/
 	}else if(autonNumber == 3){
 		delay(20);
-		leftIntake.move_velocity(200);
+		leftFrontMtr.move_velocity(200);
+		leftBackMtr.move_velocity(-200);
+		rightFrontMtr.move_velocity(200);
+		rightBackMtr.move_velocity(-200);
+	/*	leftIntake.move_velocity(200);
 		rightIntake.move_velocity(-200);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(33,0),Odometry::Angle::FromDegrees(0),PIDSettings(3.2,.2,-.05),PIDSettings(2,.01,-.15),1.5);
 		Odometry::Movement::MoveLinear(Odometry::Vector2(35,-8),Odometry::Angle::FromDegrees(0),PIDSettings(7,.3,-.0001),PIDSettings(5,.2,-.0005),2.5);
@@ -302,7 +318,7 @@ if (autonSelector.get_value() <= 1000) {
 		leftFrontMtr.move_velocity(0);
 		rightFrontMtr.move_velocity(0);
 		leftBackMtr.move_velocity(0);
-		rightBackMtr.move_velocity(0);
+		rightBackMtr.move_velocity(0);*/
 	}
 	delay(20);
 }
@@ -329,11 +345,13 @@ void opcontrol() {
 //------------------------------------------------------------------------------
 	if (armUnfold == true){
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
-		delay(600);
-		rightIntake.move_velocity(100);
 		leftIntake.move_velocity(-100);
-		delay(200);
+		rightIntake.move_velocity(100);
+		delay(1300);
 		Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+		leftIntake.move_velocity(-100);
+		rightIntake.move_velocity(100);
+		delay(1000);
 	}
 
 	bool goBack = true;
@@ -347,16 +365,24 @@ void opcontrol() {
 		//Display Odometry values
 		lcd::print(1, "%s", Odometry::GetRobotPosition().ToString());
 		lcd::print(2, "%f", Odometry::GetRobotRotation()/0.0174533);
+		lcd::print(6, "%d", autonSelector.get_value());
 		//Drive values
 		int throttle = DEADZONE(master.get_analog(THROTTLE_FORWARD) * (200/128.0));
 		int strafe = DEADZONE(master.get_analog(STRAFE) * (-200/128.0));
 		int turn = DEADZONE(master.get_analog(TURN_CONTROL) * 0.9);
 
 		//Drive Train
-		leftFrontMtr.move_velocity(turn + throttle - strafe);
-		leftBackMtr.move_velocity(turn + throttle + strafe);
-		rightFrontMtr.move_velocity(turn - throttle - strafe);
-		rightBackMtr.move_velocity(turn - throttle + strafe);
+
+		leftFrontMtr.move_velocity((turn + throttle - strafe) * slow);
+		leftBackMtr.move_velocity((turn + throttle + strafe) * slow);
+		rightFrontMtr.move_velocity((turn - throttle - strafe) * slow);
+		rightBackMtr.move_velocity((turn - throttle + strafe) * slow);
+
+		if (master.get_digital_new_press(DIGITAL_X)){
+				slow = 1;
+			} else if (master.get_digital_new_press(DIGITAL_UP)) {
+				slow = .2;
+			}
 
 		//ARM cODE
 		if (master.get_digital(DIGITAL_R1)){
@@ -367,23 +393,39 @@ void opcontrol() {
 			arm.move_velocity(0);
 		}
 
+
+		if (master.get_digital(DIGITAL_B)) trayPos = 1;
+		if (master.get_digital(DIGITAL_A)) trayPos = 2;
 		//Push Tray to Stack Cubes
 			//Store Cubes
-		if (master.get_digital_new_press(DIGITAL_B)) {
+		if (trayPos == 1) {
+			delay(20);
 			Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
-		} else if (master.get_digital_new_press(DIGITAL_Y)){
+			delay(20);
+		}
+
+		if (master.get_digital_new_press(DIGITAL_Y)){
 			while (master.get_digital_new_press(DIGITAL_Y) == false) {
-				leftIntake.move_velocity(-15);
-				rightIntake.move_velocity(15);
+				leftIntake.move_velocity(-25);
+				rightIntake.move_velocity(25);
 				leftFrontMtr.move_velocity(-10);
 				rightFrontMtr.move_velocity(10);
 				leftBackMtr.move_velocity(-10);
 				rightBackMtr.move_velocity(10);
 				}
 				delay(20);
-			} else if (master.get_digital_new_press(DIGITAL_A)){
-				Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
 			}
+			if (trayPos == 2){
+				delay(20);
+				Tray::MoveTrayToPosition(Tray::TrayPosition::Stack);
+				lcd::print(8, "%s", "A ran");
+				delay(20);
+			} else if (trayPos == 1) {
+					delay(20);
+					Tray::MoveTrayToPosition(Tray::TrayPosition::Storage);
+					delay(20);
+			}
+
 		//Intake Rollers
 		if (master.get_digital(DIGITAL_L1)){
 			leftIntake.move_velocity(200);
